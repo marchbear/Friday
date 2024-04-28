@@ -6,10 +6,12 @@
 *  CSS檔案不要動!!! 
 *  Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了!!! 
 # myapp資料夾-Code們，放在htdocs資料夾
+*  db_connection.php 連接資料庫 
 ### 登入註冊
 *  login.php 登入
 *  register.php 註冊
-*  registerg.php google 註冊
+*  registerg.php Google註冊/登入
+*  check_username.php 註冊時，確認用戶名是否已被註冊
 ### 文章發表
 * post.php 發文介面(填寫文章內容)
 * submit_article.php 執行發文動作

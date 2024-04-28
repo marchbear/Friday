@@ -96,7 +96,7 @@ if (isset($_GET['code'])) {
     $name = $google_info->name;
     $picture = $google_info->picture;
     
-    // echo "<img src='". $picture."' >Welcome Name:" . $name . " , You are registered using email: " . $email;
+    echo "<img src='". $picture."' >Welcome Name:" . $name . " , You are registered using email: " . $email;
     $_SESSION['email'] = $email;
     include 'db_connection.php';
 

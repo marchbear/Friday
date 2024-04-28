@@ -65,12 +65,12 @@
 </head>
 <body>
 <?php
-載入一次 'vendor/autoload.php' 這個文件
+//載入一次 'vendor/autoload.php' 這個文件
 require_once 'vendor/autoload.php';
 
 //設定取得Google API 三要素：用戶端編號、用戶端密鑰、已授權的重新導向URI
-// $clientID = '';
-// $clientSecret = '';
+$clientID = '749899930541-ejccij3pqo93orese744os3j0j6kvk38.apps.googleusercontent.com';
+$clientSecret = '';
 $redirectUrl = 'http://localhost/myapp/login.php';
 
 // 建立client端 的 request需求 給 Google
@@ -80,10 +80,11 @@ $client->setClientSecret($clientSecret);
 $client->setRedirectUri($redirectUrl);
 $client->addScope('profile');
 $client->addScope('email');
+
 $auth_url = $client->createAuthUrl();
 
 
-$_GET['code']的'code' 是取得 [授權碼]
+//$_GET['code']的'code' 是取得 [授權碼]
 if (isset($_GET['code'])) {
     session_start();
     $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
@@ -96,7 +97,7 @@ if (isset($_GET['code'])) {
     $name = $google_info->name;
     $picture = $google_info->picture;
     
-    echo "<img src='". $picture."' >Welcome Name:" . $name . " , You are registered using email: " . $email;
+    // echo "<img src='". $picture."' >Welcome Name:" . $name . " , You are registered using email: " . $email;
     $_SESSION['email'] = $email;
     include 'db_connection.php';
 
@@ -141,6 +142,7 @@ if (isset($_GET['code'])) {
 
 
 <?php
+session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include 'db_connection.php';
 
@@ -149,8 +151,18 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 // 在資料庫中查找匹配的用戶記錄
-$sql = "SELECT * FROM users WHERE name='$username'";
-$result = $conn->query($sql);
+// 準備一個 SQL 語句，使用參數化查詢
+$sql = "SELECT * FROM users WHERE name=?";
+$stmt = $conn->prepare($sql);
+
+// 將用戶輸入綁定到參數
+$stmt->bind_param("s", $username);
+
+// 執行查詢
+$stmt->execute();
+
+// 取得查詢結果
+$result = $stmt->get_result();
 if ($result->num_rows > 0) {
     // 找到用戶，檢查密碼是否正確
     $user = $result->fetch_assoc();

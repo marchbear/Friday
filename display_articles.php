@@ -80,9 +80,9 @@
     }
     else {
         // 未登入，顯示為登入
-        // $loginText = "登入";
-        // $loginLink = "login.php"; 
-        // $greeting = "登入以查看文章(❛◡❛✿)";
+        $loginText = "登入";
+        $loginLink = "login.php"; 
+        $greeting = "登入以查看文章(❛◡❛✿)";
     }
     
 ?>

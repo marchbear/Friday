@@ -56,7 +56,6 @@
             font-size: 28px;
             margin: 5px 5px 0 0; 
         }
-
     </style>
     
 </head>
@@ -81,9 +80,9 @@
     }
     else {
         // 未登入，顯示為登入
-        $loginText = "登入";
-        $loginLink = "login.php"; 
-        $greeting = "登入以查看文章吧(❛◡❛✿)";
+        // $loginText = "登入";
+        // $loginLink = "login.php"; 
+        // $greeting = "登入以查看文章(❛◡❛✿)";
     }
     
 ?>

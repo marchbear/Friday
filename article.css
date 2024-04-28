@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    color: #343a40;
+    
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #d5a637;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: hsl(22, 53%, 30%);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form input[type="submit"]:hover {
+    background-color: #9a4d4d;
+}
+
+h2 {
+    margin-top: 30px;
+    color: #343a40;
+    text-align: left;
+}
+
+.article {
+    background-color: #fff;
+    padding: 30px;
+    margin:0 auto;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    max-width: 1200px;
+    box-shadow: 0 10px 4px rgba(228, 134, 134, 0.1);
+}
+
+.article h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.article p {
+    margin-bottom: 10px;
+}
+
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center; /* 將表單內容置中 */
+}
+

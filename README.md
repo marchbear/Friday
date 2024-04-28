@@ -3,8 +3,8 @@
 先下載XAMPP安裝包
 開啟XAMPP Start Apache  & Mysql
 
-!!! CSS檔案不要動
-!!! Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了 
+*  CSS檔案不要動!!! 
+*  Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了!!! 
 # myapp資料夾-Code們，放在htdocs資料夾
 ### 登入註冊
 *  login.php 登入

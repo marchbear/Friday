@@ -5,7 +5,7 @@
 
 *  CSS檔案不要動!!! 
 *  Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了!!! 
-# myapp資料夾-Code們，放在htdocs資料夾
+## myapp資料夾-Code們，放在htdocs資料夾
 *  db_connection.php 連接資料庫 
 ### 登入註冊
 *  login.php 登入
@@ -19,5 +19,5 @@
 * article_content.php 文章內文
 * display_articles.php 文章列表
 * submit_comment.php 執行留言動作
-# friday.sql-先建立一個資料庫friday，再匯入此檔案
+## friday.sql-先建立一個資料庫friday，再匯入此檔案
 僅給資料庫架構，資料自行添加

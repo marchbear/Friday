@@ -70,6 +70,8 @@ $conn->close();
 
             if (password !== confirm_password) {
                 document.getElementById("password_error").innerHTML = "密碼不匹配";
+                document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
+                reg_btn.style.backgroundColor = "#ccc"; // 設置按鈕為灰色
             } else {
                 document.getElementById("password_error").innerHTML = "";
             }
@@ -83,6 +85,9 @@ $conn->close();
                     var response = xhr.responseText;
                     if (response == "exist") {
                         document.getElementById("username_error").innerHTML = "用戶名已存在";
+                        document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
+                        reg_btn.style.backgroundColor = "#ccc"; /// 設置按鈕為灰色
+
                     } else {
                         document.getElementById("username_error").innerHTML = "";
                     }

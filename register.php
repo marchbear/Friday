@@ -76,6 +76,8 @@ $conn->close();
 
             if (password !== confirm_password) {
                 document.getElementById("password_error").innerHTML = "密碼不匹配";
+                document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
+                reg_btn.style.backgroundColor = "#ccc"; // 設置按鈕為灰色
             } else {
                 document.getElementById("password_error").innerHTML = "";
             }
@@ -89,6 +91,9 @@ $conn->close();
                     var response = xhr.responseText;
                     if (response == "exist") {
                         document.getElementById("username_error").innerHTML = "用戶名已存在";
+                        document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
+                        reg_btn.style.backgroundColor = "#ccc"; /// 設置按鈕為灰色
+
                     } else {
                         document.getElementById("username_error").innerHTML = "";
                     }
@@ -112,7 +117,7 @@ $conn->close();
                 <label for="confirm_password">確認密碼</label>
                 <input type="password" id="confirm_password" name="confirm_password" onkeyup="checkPasswordMatch();" required>
                 <span id="password_error" style="color: red;"></span>
-                <button type="submit" class='reg_btn'>註冊</button>
+                <button id='reg_btn' type="submit" >註冊</button>
             </form>
             <a class=switch href="login.php" >已有帳號，我要登入</a> 
         </div>

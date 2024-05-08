@@ -1,8 +1,13 @@
 # Friday
 配置步驟
-1. 下載XAMPP安裝包
-2. 開啟XAMPP
-3. Start Apache  & Mysql
+1. 下載此zip
+2. 下載XAMPP安裝包
+3. 將檔案都放到xampp/htdocs/myapp(自己新增一個資料夾)
+4. 開啟XAMPP
+5. Start Apache  & Mysql
+6. 新建 friday 資料庫
+7. 匯入friday.sql檔案
+8. 打開網址 http://localhost/myapp/register.php
 
 *  CSS檔案不要更改!!! 
 *  Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了!!! 

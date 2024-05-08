@@ -1,7 +1,7 @@
 # Friday
 配置步驟
-1. 下載此zip
-2. 下載XAMPP安裝包
+1. 下載XAMPP安裝包
+2. 下載此zip
 3. 將檔案都放到xampp/htdocs/myapp(自己新增一個資料夾)
 4. 開啟XAMPP
 5. Start Apache  & Mysql

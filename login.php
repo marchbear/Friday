@@ -115,7 +115,7 @@ if ($result->num_rows > 0) {
     if (password_verify($password,$user['password'])) {
         // 密碼正確，登入成功
         $_SESSION['loggedin'] = true;
-        $_SESSION['user_id'] = $users['id'];
+        $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $username;
         header('Location: display_articles.php');
     } else {

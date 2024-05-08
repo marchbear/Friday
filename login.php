@@ -64,61 +64,6 @@
     </style>
 </head>
 <body>
-<?php
-//載入一次 'vendor/autoload.php' 這個文件
-require_once 'vendor/autoload.php';
-
-//設定取得Google API 三要素：用戶端編號、用戶端密鑰、已授權的重新導向URI
-$clientID = '749899930541-ejccij3pqo93orese744os3j0j6kvk38.apps.googleusercontent.com';
-$clientSecret = '';
-$redirectUrl = 'http://localhost/myapp/login.php';
-
-// 建立client端 的 request需求 給 Google
-$client = new Google_Client();
-$client->setClientId($clientID);
-$client->setClientSecret($clientSecret);
-$client->setRedirectUri($redirectUrl);
-$client->addScope('profile');
-$client->addScope('email');
-
-$auth_url = $client->createAuthUrl();
-
-
-//$_GET['code']的'code' 是取得 [授權碼]
-if (isset($_GET['code'])) {
-    session_start();
-    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-    $client->setAccessToken($token);
-
-    //取得GOOGLE使用者帳號資訊
-    $gauth = new Google_Service_Oauth2($client);
-    $google_info = $gauth->userinfo->get();
-    $email = $google_info->email;
-    $name = $google_info->name;
-    $picture = $google_info->picture;
-    
-    // echo "<img src='". $picture."' >Welcome Name:" . $name . " , You are registered using email: " . $email;
-    $_SESSION['email'] = $email;
-    include 'db_connection.php';
-
-    // 在資料庫中查找匹配的用戶記錄
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        // 此信箱已註冊，則登入
-            $_SESSION['loggedin'] = true;
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            header('Location: display_articles.php');
-    } else {
-        // 無此用戶
-        header('Location: registerg.php');
-    }
-    $conn->close();
-
-}
-?>
 
 <a href="display_articles.php" class="back_btn">返回文章列表</a>
     <div class="container">
@@ -131,7 +76,6 @@ if (isset($_GET['code'])) {
                 <input type="password" id="password" name="password" required>
                 <button type="submit" class="log_btn">登入</button>
             </form>
-            <a class="google" href="<?php echo $client->createAuthUrl() ?>"><img src="gmail.png">Google註冊/登入</a>
             <br>
             <a class="switch" href="register.php">尚未有帳戶，我要註冊</a>
             

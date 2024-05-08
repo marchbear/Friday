@@ -80,6 +80,8 @@ $conn->close();
                 reg_btn.style.backgroundColor = "#ccc"; // 設置按鈕為灰色
             } else {
                 document.getElementById("password_error").innerHTML = "";
+                document.getElementById("reg_btn").disabled = false;
+                reg_btn.style.backgroundColor = "blue";
             }
         }
 
@@ -96,6 +98,8 @@ $conn->close();
 
                     } else {
                         document.getElementById("username_error").innerHTML = "";
+                        document.getElementById("reg_btn").disabled = false;
+                        reg_btn.style.backgroundColor = "blue";
                     }
                 }
             };

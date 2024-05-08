@@ -1,7 +1,8 @@
 # Friday
-
-先下載XAMPP安裝包
-開啟XAMPP Start Apache  & Mysql
+配置步驟
+1. 下載XAMPP安裝包
+2. 開啟XAMPP
+3. Start Apache  & Mysql
 
 *  CSS檔案不要更改!!! 
 *  Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了!!! 

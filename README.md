@@ -5,9 +5,10 @@
 3. 將檔案都放到xampp/htdocs/myapp(自己新增一個資料夾)
 4. 開啟XAMPP
 5. Start Apache  & Mysql
-6. 新建 friday 資料庫
-7. 匯入friday.sql檔案
-8. 打開網址 http://localhost/myapp/register.php
+6. 打開mysql的admin
+7. 新建 friday 資料庫
+8. 匯入friday.sql檔案
+9. 打開網址 http://localhost/myapp/register.php
 
 *  CSS檔案不要更改!!! 
 *  Google註冊登入不能試 因為上傳GitHub會有Oauth安全問題所以我先拿掉了!!! 

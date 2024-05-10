@@ -40,14 +40,17 @@
     <br><br>
     <h1>發表文章</h1>
 
+    
     <!-- Article Form -->
     <div class="form-container">
         <form action="submit_article.php" method="POST">
             <label for="title">輸入文章標題(美食名稱、店名等)</label><br>
-            <input type="text" id="title" name="title" maxlength="30"><br>
+            <!-- 加入required,讓title那欄必填 -->
+            <input type="text" id="title" name="title" maxlength="15" required><br>
             <br>
             <label for="content">輸入內容(告訴大家他有多好吃!)</label><br>
-            <textarea id="content" name="content" maxlength="300"></textarea><br>
+            <!-- 加入required,讓content那欄必填 -->
+            <textarea id="content" name="content" maxlength="200" required></textarea><br>
             <input type="submit" value="Share with everyone" >
         </form>
     </div>

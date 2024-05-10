@@ -26,5 +26,5 @@
 * article_content.php 文章內文
 * display_articles.php 文章列表
 * submit_comment.php 執行留言動作
-## friday.sql-先建立一個資料庫friday，再匯入此檔案
+## friday.sql
 僅給資料庫架構，資料自行添加

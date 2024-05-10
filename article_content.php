@@ -150,7 +150,7 @@
     <div class="comment-section">
     <form action="submit_comment.php" method="POST">
         <label for="comment">我想說.....</label>
-        <textarea id="comment" name="comment" rows="4" maxlength="55" required></textarea>
+        <textarea id="comment" name="comment" rows="4" maxlength="50" required></textarea>
         <button type="submit" class=comment-btn>提交</button>
     </form>
 
@@ -187,7 +187,6 @@
         // 關閉資料庫連接
         mysqli_close($conn);
         ?>
-        <!-- 留言格式可以根據你的需求來設計 -->
     </div>
 </div>
 </body>

@@ -46,7 +46,7 @@
         <form action="submit_article.php" method="POST">
             <label for="title">輸入文章標題(美食名稱、店名等)</label><br>
             <!-- 加入required,讓title那欄必填 -->
-            <input type="text" id="title" name="title" maxlength="15" required><br>
+            <input type="text" id="title" name="title" maxlength="25" required><br>
             <br>
             <label for="content">輸入內容(告訴大家他有多好吃!)</label><br>
             <!-- 加入required,讓content那欄必填 -->

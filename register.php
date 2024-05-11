@@ -1,24 +1,24 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-include 'db_connection.php';
-session_start();
-// 接收表單提交的資料
-$name = $_POST['name'];
-$password = $_POST['password'];
-// 將密碼加密
-// $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-$hashed_password = password_hash($password, PASSWORD_BCRYPT);
+    include 'db_connection.php';
+    session_start();
+    // 接收表單提交的資料
+    $name = $_POST['name'];
+    $password = $_POST['password'];
+    // 將密碼加密
+    // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-// 將資料插入到資料庫中
-$sql = "INSERT INTO users (name, password) VALUES ('$name', '$hashed_password')";
+    // 將資料插入到資料庫中
+    $sql = "INSERT INTO users (name, password) VALUES ('$name', '$hashed_password')";
 
-if ($conn->query($sql) === TRUE) {
-    header('Location: login.php');
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
+    if ($conn->query($sql) === TRUE) {
+        header('Location: login.php');
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 
-$conn->close();
+    $conn->close();
 }
 ?>
 
@@ -40,7 +40,7 @@ $conn->close();
             color: #668B8B;
         }
 
-        #username_error,#password_error{
+        #username_error,#password_error, #password_strength{
             font-size: 14px;
         }
 
@@ -70,16 +70,19 @@ $conn->close();
 </head>
 <body>
     <script>
-        function checkPasswordMatch() {
+        function validateForm() {
             var password = document.getElementById("password").value;
             var confirm_password = document.getElementById("confirm_password").value;
+            var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/; // 至少包含一個數字、一個小寫字母、一個大寫字母、一個符號，且長度至少為8個字符
 
-            if (password !== confirm_password) {
-                document.getElementById("password_error").innerHTML = "密碼不匹配";
-                document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
-                reg_btn.style.backgroundColor = "#ccc"; // 設置按鈕為灰色
+            if (password !== confirm_password || !passwordStrength.test(password)) {
+                document.getElementById("password_error").innerHTML = "密碼不匹配或不符合強密碼規則";
+                document.getElementById("reg_btn").disabled = true;
+                reg_btn.style.backgroundColor = "#ccc";
             } else {
                 document.getElementById("password_error").innerHTML = "";
+                document.getElementById("reg_btn").disabled = false;
+                reg_btn.style.backgroundColor = "blue";
             }
         }
 
@@ -96,6 +99,8 @@ $conn->close();
 
                     } else {
                         document.getElementById("username_error").innerHTML = "";
+                        document.getElementById("reg_btn").disabled = false;
+                        reg_btn.style.backgroundColor = "blue";
                     }
                 }
             };
@@ -113,11 +118,11 @@ $conn->close();
                 <input type="text" id="name" name="name" onblur="checkUsernameAvailability();" required>
                 <span id="username_error" style="color: red;"></span>
                 <label for="password">密碼</label>
-                <input type="password" id="password" name="password" onkeyup="checkPasswordStrength();" required>
+                <input type="password" id="password" name="password" onkeyup="validateForm();" required>
                 <label for="confirm_password">確認密碼</label>
-                <input type="password" id="confirm_password" name="confirm_password" onkeyup="checkPasswordMatch();" required>
+                <input type="password" id="confirm_password" name="confirm_password" onkeyup="validateForm();" required>
                 <span id="password_error" style="color: red;"></span>
-                <button id='reg_btn' type="submit" >註冊</button>
+                <button id='reg_btn' type="submit" disabled>註冊</button>
             </form>
             <a class=switch href="login.php" >已有帳號，我要登入</a> 
         </div>

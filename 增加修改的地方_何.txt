@@ -1,0 +1,55 @@
+註冊/登入(登入失敗次數限制)
+login.php
+
+*新增檢查登入失敗次數，若三次錯誤就鎖定登入3分鐘
+------------------------------------------------
+(code 100~110行)
+    // 檢查登入失敗次數是否已經達到 3 次
+    if ($_SESSION['login_attempts'] >= 2) { // 因為從 0 開始計算，所以當次數達到 3 次時實際上是 2
+        // 如果已經達到 3 次，檢查上次登入失敗的時間是否超過 3 分鐘
+        if (isset($_SESSION['last_login_attempt']) && (time() - $_SESSION['last_login_attempt'] < 180)) {
+            // 如果上次登入失敗時間距離現在不足 3 分鐘，則限制登入，並顯示警示視窗
+            echo "<script>alert('您已經連續登入失敗超過三次，請稍後再試。'); window.location.href='login.php';</script>";
+            exit;
+        } else {
+            // 如果上次登入失敗時間超過 3 分鐘，則重置登入失敗次數為 0
+            $_SESSION['login_attempts'] = 0;
+        }
+    }
+
+(code 129~149行)
+
+if (password_verify($password, $user['password'])) {
+            // 密碼正確，登入成功，重置登入失敗次數
+            $_SESSION['loggedin'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $username;
+            $_SESSION['login_attempts'] = 0;
+            header('Location: display_articles.php');
+        } else {
+            // 密碼錯誤，增加登入失敗次數
+            $_SESSION['login_attempts']++;
+            // 設置上次登入失敗的時間
+            $_SESSION['last_login_attempt'] = time();
+            // 記錄本次登入失敗的用戶名
+            $_SESSION['last_username'] = $username;
+            if ($_SESSION['login_attempts'] >= 3) { // 檢查是否達到三次失敗
+                echo "<script>alert('您已經連續登入失敗超過三次，請稍後再試。'); window.location.href='login.php';</script>";
+                exit;
+            } else {
+                echo "<script>alert('密碼錯誤');</script>";
+            }
+        }
+
+------------------------------------------------
+
+註冊/登入(註冊強制使用強密碼)
+
+register.php
+
+javascirpt部分
+
+(code 73~87行)
+
+將原本的兩個函數分別檢查密碼是否相同和密碼強度，合併為一個函數 validateForm()，並新增"密碼強度"的正規表達式(8位以上英文大小寫、數字、符號組成)。
+

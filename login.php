@@ -71,9 +71,9 @@
         <h2>登入</h2>
         <form action="login.php" method="POST">
             <label for="username">用戶名</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" maxlength=20 required>
             <label for="password">密碼</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" maxlength=30 required>
             <button type="submit" class="log_btn">登入</button>
         </form>
         <br>

@@ -66,66 +66,106 @@
 <body>
 
 <a href="display_articles.php" class="back_btn">返回文章列表</a>
-    <div class="container">
-        <div class="login-container">
-            <h2>登入</h2>
-            <form action="login.php" method="POST">
-                <label for="username">用戶名</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">密碼</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit" class="log_btn">登入</button>
-            </form>
-            <br>
-            <a class="switch" href="register.php">尚未有帳戶，我要註冊</a>
-            
-        </div>
+<div class="container">
+    <div class="login-container">
+        <h2>登入</h2>
+        <form action="login.php" method="POST">
+            <label for="username">用戶名</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">密碼</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="log_btn">登入</button>
+        </form>
+        <br>
+        <a class="switch" href="register.php">尚未有帳戶，我要註冊</a>
+        
     </div>
-</body>
-</html>
-
+</div>
 
 <?php
 session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-include 'db_connection.php';
+    include 'db_connection.php';
 
-// 接收表單提交的資料
-$username = $_POST['username'];
-$password = $_POST['password'];
+    // 接收表單提交的資料
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-// 在資料庫中查找匹配的用戶記錄
-// 準備一個 SQL 語句，使用參數化查詢
-$sql = "SELECT * FROM users WHERE name=?";
-$stmt = $conn->prepare($sql);
+    // 在資料庫中查找匹配的用戶記錄
+    // 準備一個 SQL 語句，使用參數化查詢
+    $sql = "SELECT * FROM users WHERE name=?";
+    $stmt = $conn->prepare($sql);
+    // 將用戶輸入綁定到參數
+    $stmt->bind_param("s", $username);
+    // 執行查詢
+    $stmt->execute();
+    // 取得查詢結果
+    $result = $stmt->get_result();
 
-// 將用戶輸入綁定到參數
-$stmt->bind_param("s", $username);
+    // 找到用戶
+    if ($result->num_rows > 0) {
 
-// 執行查詢
-$stmt->execute();
+        $user = $result->fetch_assoc();
+        $attempt = $user['attempt'];
 
-// 取得查詢結果
-$result = $stmt->get_result();
-if ($result->num_rows > 0) {
-    // 找到用戶，檢查密碼是否正確
-    $user = $result->fetch_assoc();
-    // 使用 password_verify() 函數驗證密碼
+        // 檢查登入失敗次數是否已經達到 3 次
+        if ($attempt >= 3) { 
+            // 如果已經達到 3 次，檢查上次登入失敗的時間是否超過 5 分鐘
+            $block_time = $user['block_time'];
+            if (time() - strtotime($block_time) < 180) {
+                // 如果上次登入失敗時間距離現在不足 5 分鐘，則限制登入，並顯示警示視窗
+                echo "<script>alert('您已經連續登入失敗超過三次，請稍後再試。'); window.location.href='login.php';</script>";
+                exit;
+            } else {
+                // 如果上次登入失敗時間超過 5 分鐘，則重置登入失敗次數為 0
+                $query = "UPDATE users SET attempt = 0 ,block_time = NULL WHERE name = ?";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("s", $username);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }else {
+            // 使用 password_verify() 函數驗證密碼
+            if (password_verify($password, $user['password'])) {
+                // 密碼正確，登入成功，重置登入失敗次數
+                $_SESSION['loggedin'] = true;
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $username;
 
-    if (password_verify($password,$user['password'])) {
-        // 密碼正確，登入成功
-        $_SESSION['loggedin'] = true;
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $username;
-        header('Location: display_articles.php');
+                $query = "UPDATE users SET attempt = 0 WHERE name = ?";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("s", $username);
+                $stmt->execute();
+                $stmt->close();
+
+                header('Location: display_articles.php');
+            } else {
+                // 密碼錯誤，增加登入失敗次數
+                $attempt++;
+                echo "<script>alert('密碼錯誤，還有" . 3-$attempt . "次嘗試機會');</script>";
+                $query = "UPDATE users SET attempt = ? WHERE name = ?";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("is", $attempt, $username);
+                $stmt->execute();
+                $stmt->close();
+
+                if ($attempt >= 3) { // 檢查是否達到三次失敗
+                    // 設置登入失敗解鎖的時間
+                    $query = "UPDATE users SET block_time = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE name = ?";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("s", $username);
+                    $stmt->execute();
+                    $stmt->close();
+                    echo "<script>alert('您已經連續登入失敗超過三次，請稍後再試。'); window.location.href='login.php';</script>";
+                    exit;
+                }
+            }
+        }
     } else {
-        // 密碼錯誤
-        echo "<script>alert('密碼錯誤');</script>";
+        echo "<script>alert('無此用戶');</script>";
     }
-} else {
-    // 無此用戶
-    echo "<script>alert('無此用戶');</script>";
-}
-$conn->close();
+    $conn->close();
 }
 ?>
+</body>
+</html>

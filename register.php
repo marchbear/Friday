@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #668B8B;
         }
 
-        #username_error,#password_error, #password_strength{
+        #username_error,#password_error, #password_strength,#validate_error{
             font-size: 14px;
         }
 
@@ -70,43 +70,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <script>
-        function validateForm() {
-            var password = document.getElementById("password").value;
-            var confirm_password = document.getElementById("confirm_password").value;
-            var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/; // 至少包含一個數字、一個小寫字母、一個大寫字母、一個符號，且長度至少為8個字符
-
-            if (password !== confirm_password || !passwordStrength.test(password)) {
-                document.getElementById("password_error").innerHTML = "密碼不匹配或不符合強密碼規則";
-                document.getElementById("reg_btn").disabled = true;
-                reg_btn.style.backgroundColor = "#ccc";
-            } else {
-                document.getElementById("password_error").innerHTML = "";
-                document.getElementById("reg_btn").disabled = false;
-                reg_btn.style.backgroundColor = "blue";
-            }
-        }
-
-        function checkUsernameAvailability() {
-            var username = document.getElementById("name").value;
-            var xhr = new XMLHttpRequest();
+        function validate() {
+        var username = document.getElementById("name").value;
+        var password = document.getElementById("password").value;
+        var confirm_password = document.getElementById("confirm_password").value;
+        var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+        
+        var isValid = true;
+        
+        //檢查用戶名稱是否已存在
+        var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var response = xhr.responseText;
                     if (response == "exist") {
                         document.getElementById("username_error").innerHTML = "用戶名已存在";
-                        document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
-                        reg_btn.style.backgroundColor = "#ccc"; /// 設置按鈕為灰色
+                        isValid = false;
 
                     } else {
                         document.getElementById("username_error").innerHTML = "";
-                        document.getElementById("reg_btn").disabled = false;
-                        reg_btn.style.backgroundColor = "blue";
                     }
                 }
             };
             xhr.open("GET", "check_username.php?username=" + username, true);
             xhr.send();
+
+        // 檢查密碼是否符合規則
+        if (!passwordStrength.test(password)) {
+            document.getElementById("validate_error").innerHTML = "密碼不符合強密碼規則";
+            isValid = false;
+        } else {
+            document.getElementById("validate_error").innerHTML = "";
         }
+
+        // 檢查密碼是否匹配
+        if (password !== confirm_password) {
+            document.getElementById("password_error").innerHTML = "密碼不匹配";
+            isValid = false;
+        } else {
+            document.getElementById("password_error").innerHTML = "";
+        }
+
+        // 按鈕啟用
+        document.getElementById("reg_btn").disabled = !isValid;
+        document.getElementById("reg_btn").style.backgroundColor = isValid ? "#3c8fa7" : "#ccc";
+    }
+
     </script>
     <a href="display_articles.php" class="back_btn">返回文章列表</a>
     <br><br>
@@ -115,12 +124,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2>註冊</h2>
             <form action="register.php" method="POST">
                 <label for="name">用戶名</label>
-                <input type="text" id="name" name="name" onblur="checkUsernameAvailability();" required>
+                <input type="text" id="name" name="name" onblur="validate();" required>
                 <span id="username_error" style="color: red;"></span>
+
                 <label for="password">密碼</label>
-                <input type="password" id="password" name="password" onkeyup="validateForm();" required>
+                <input type="password" id="password" name="password" onkeyup="validate();" required>
+                <span id="validate_error" style="color: red;"></span>
+
                 <label for="confirm_password">確認密碼</label>
-                <input type="password" id="confirm_password" name="confirm_password" onkeyup="validateForm();" required>
+                <input type="password" id="confirm_password" name="confirm_password" onkeyup="validate();" required>
                 <span id="password_error" style="color: red;"></span>
                 <button id='reg_btn' type="submit" disabled>註冊</button>
             </form>

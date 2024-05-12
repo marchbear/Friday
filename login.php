@@ -112,18 +112,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($attempt >= 3) { 
             // 如果已經達到 3 次，檢查上次登入失敗的時間是否超過 5 分鐘
             $block_time = $user['block_time'];
-            if (time() > strtotime($block_time)) {
+            if (time() < strtotime($block_time)) {
                 // 如果上次登入失敗時間距離現在不足 5 分鐘，則限制登入，並顯示警示視窗
                 echo "<script>alert('您已經連續登入失敗超過三次，請稍後再試。'); window.location.href='login.php';</script>";
                 exit;
             } else {
                 $query = "UPDATE users SET attempt = 0 ,block_time = NULL WHERE name = ?";
+                $attempt = 0;
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param("s", $username);
                 $stmt->execute();
                 $stmt->close();
             }
-        }else {
+        }
+        if($attempt < 3) {
             // 使用 password_verify() 函數驗證密碼
             if (password_verify($password, $user['password'])) {
                 // 密碼正確，登入成功，重置登入失敗次數

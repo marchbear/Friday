@@ -8,14 +8,17 @@ if(isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
 }
 // 將資料插入到資料庫中
-$sql = "INSERT INTO users (name, email) VALUES ('$name', '$email')";
+$sql = "INSERT INTO users (name, email) VALUES (?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $name, $email); // "ss" 代表兩個字串參數
+$stmt->execute();
 
-if ($conn->query($sql) === TRUE) {
+if ($stmt->affected_rows > 0) {
     header('Location: login.php');
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
-
+$stmt->close();
 $conn->close();
 }
 ?>
@@ -60,6 +63,9 @@ $conn->close();
             font-weight: bold;
             font-size: 22px;
         }
+        .reg_btn{
+            background-color: #5a8fa7;
+        }
     </style>
 </head>
 <body>
@@ -72,11 +78,13 @@ $conn->close();
                     var response = xhr.responseText;
                     if (response == "exist") {
                         document.getElementById("username_error").innerHTML = "用戶名已存在";
-                        document.getElementById("reg_btn").disabled = true; //設置按鈕無法點擊
-                        reg_btn.style.backgroundColor = "#ccc"; /// 設置按鈕為灰色
+                        document.getElementById("reg_btn").style.backgroundColor = "#ccc"; /// 設置按鈕為灰色
+                        document.getElementById("reg_btn").disabled = true; // 禁用按鈕
 
                     } else {
                         document.getElementById("username_error").innerHTML = "";
+                        document.getElementById("reg_btn").disabled = false; //設置按鈕可點擊
+                        document.getElementById("reg_btn").style.backgroundColor = "#5a8fa7";
                     }
                 }
             };
@@ -91,9 +99,9 @@ $conn->close();
             <h2>註冊</h2>
             <form action="registerg.php" method="POST">
                 <label for="name">用戶名</label>
-                <input type="text" id="name" name="name" onblur="checkUsernameAvailability();" required>
+                <input type="text" id="name" name="name" maxlength=20 onblur="checkUsernameAvailability();" required>
                 <span id="username_error" style="color: red;"></span>
-                <button type="submit" class='reg_btn'>註冊</button>
+                <button type="submit" id='reg_btn'>註冊</button>
             </form>
         </div>
     </div>

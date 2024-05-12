@@ -6,20 +6,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $password = $_POST['password'];
     // 將密碼加密
-    // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
+    
     // 將資料插入到資料庫中
-    $sql = "INSERT INTO users (name, password) VALUES ('$name', '$hashed_password')";
+    $sql = "INSERT INTO users (name, password) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $name, $hashed_password);
 
-    if ($conn->query($sql) === TRUE) {
+    if ($stmt->execute()) {
         header('Location: login.php');
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
+    $stmt->close();
     $conn->close();
-}
 ?>
 
 <!DOCTYPE html>

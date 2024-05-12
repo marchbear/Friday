@@ -8,8 +8,14 @@ if (isset($_GET['username'])) {
     $username = $_GET['username'];
 
     // 在資料庫中查詢該用戶名是否已存在
-    $sql = "SELECT * FROM users WHERE name='$username'";
-    $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM users WHERE name=?";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    }
 
     // 如果查詢結果有資料，表示用戶名已存在，則返回 "exist" 給前端
     if (mysqli_num_rows($result) > 0) {

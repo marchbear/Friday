@@ -167,11 +167,16 @@
         FROM comments AS c 
         INNER JOIN users ON c.author_id = users.id
         INNER JOIN articles AS a ON c.article_id = a.id
-        WHERE c.article_id = $article_id
+        WHERE c.article_id = ?
         ORDER BY c.created_at DESC";
 
-        $result = mysqli_query($conn, $sql);
+        $stmt = mysqli_prepare($conn, $sql);
 
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "i", $article_id);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+        }
         // 如果有留言，顯示它們
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {

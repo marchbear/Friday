@@ -124,15 +124,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2>註冊</h2>
             <form action="register.php" method="POST">
                 <label for="name">用戶名</label>
-                <input type="text" id="name" name="name" onblur="validate();" required>
+                <input type="text" id="name" name="name" maxlength=20 onblur="validate();" required>
                 <span id="username_error" style="color: red;"></span>
 
                 <label for="password">密碼</label>
-                <input type="password" id="password" name="password" onkeyup="validate();" required>
+                <input type="password" id="password" name="password" maxlength=30 onkeyup="validate();" required>
                 <span id="validate_error" style="color: red;"></span>
 
                 <label for="confirm_password">確認密碼</label>
-                <input type="password" id="confirm_password" name="confirm_password" onkeyup="validate();" required>
+                <input type="password" id="confirm_password" name="confirm_password" maxlength=30  onkeyup="validate();" required>
                 <span id="password_error" style="color: red;"></span>
                 <button id='reg_btn' type="submit" disabled>註冊</button>
             </form>

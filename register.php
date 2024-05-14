@@ -18,7 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
-
     $stmt->close();
     $conn->close();
 }
@@ -77,9 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         var password = document.getElementById("password").value;
         var confirm_password = document.getElementById("confirm_password").value;
         var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
-        
         var isValid = true;
-        
+       
         //檢查用戶名稱是否已存在
         var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -87,11 +85,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     var response = xhr.responseText;
                     if (response == "exist") {
                         document.getElementById("username_error").innerHTML = "用戶名已存在";
-                        isValid = false;
+                        document.getElementById("reg_btn").disabled = true; // 禁用註冊按鈕
+                        document.getElementById("reg_btn").style.backgroundColor = "#ccc";
 
                     } else {
                         document.getElementById("username_error").innerHTML = "";
                     }
+                    
                 }
             };
             xhr.open("GET", "check_username.php?username=" + username, true);
@@ -134,9 +134,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span id="validate_error" style="color: red;"></span>
 
                 <label for="confirm_password">確認密碼</label>
-                <input type="password" id="confirm_password" name="confirm_password" maxlength=30  onkeyup="validate();" required>
+                <input type="password" id="confirm_password" name="confirm_password" maxlength=30 onkeyup="validate();" required>
                 <span id="password_error" style="color: red;"></span>
-                <button id='reg_btn' type="submit" disabled>註冊</button>
+                <button id='reg_btn' type="submit" >註冊</button>
             </form>
             <a class=switch href="login.php" >已有帳號，我要登入</a> 
         </div>

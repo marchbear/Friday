@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-04-29 08:23:53
+-- 產生時間： 2024-05-14 13:17:22
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -59,7 +59,9 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `password` varchar(256) DEFAULT NULL,
-  `email` varchar(128) DEFAULT NULL
+  `email` varchar(128) DEFAULT NULL,
+  `attempt` int(11) DEFAULT 0,
+  `block_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

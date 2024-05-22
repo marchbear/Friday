@@ -3,7 +3,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include 'db_connection.php';
 session_start();
 // 接收表單提交的資料
-$name = $_POST['name'];
+$name = trim($_POST['name']);
 if(isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
 }

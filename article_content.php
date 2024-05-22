@@ -121,9 +121,18 @@
 
             // 根據文章 ID 查詢該文章的詳細內容
             $sql = "SELECT articles.*, users.name AS author FROM articles 
-            INNER JOIN users ON articles.author_id = users.id
-            WHERE articles.id = $article_id";
-            $result = mysqli_query($conn, $sql);
+                          INNER JOIN users ON articles.author_id = users.id
+                          WHERE articles.id = ?";
+             $stmt = $conn->prepare($sql);
+             
+            // 綁定參數，'i' 表示整數型態
+            $stmt->bind_param('i', $article_id);
+
+            // 執行查詢
+            $stmt->execute();
+
+            // 獲取結果
+            $result = $stmt->get_result();
 
             if (mysqli_num_rows($result) == 1) {
                 $_SESSION['article_id']=$article_id;
@@ -143,7 +152,7 @@
             echo "Invalid request.";
         }
 
-        mysqli_close($conn);
+        $stmt->close();
         ?>
     </div>
 

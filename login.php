@@ -65,6 +65,7 @@
 </head>
 <body>
 
+
 <a href="display_articles.php" class="back_btn">返回文章列表</a>
 <div class="container">
     <div class="login-container">
@@ -84,12 +85,14 @@
 
 <?php
 session_start();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include 'db_connection.php';
 
+
     // 接收表單提交的資料
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     // 在資料庫中查找匹配的用戶記錄
     // 準備一個 SQL 語句，使用參數化查詢
@@ -131,19 +134,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // 密碼正確，登入成功，重置登入失敗次數
                 $_SESSION['loggedin'] = true;
                 $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $username;
+                $_SESSION['user_name'] = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
 
-                $query = "UPDATE users SET attempt = 0 WHERE name = ?";
+                $query = "UPDATE users SET attempt = 0, block_time = NULL WHERE name = ?";
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param("s", $username);
                 $stmt->execute();
                 $stmt->close();
-
                 header('Location: display_articles.php');
             } else {
                 // 密碼錯誤，增加登入失敗次數
                 $attempt++;
-                echo "<script>alert('密碼錯誤，還有" . 3-$attempt . "次嘗試機會');</script>";
+                echo "<script>alert('密碼錯誤，還有" .( 3-$attempt ). "次嘗試機會');</script>";
                 $query = "UPDATE users SET attempt = ? WHERE name = ?";
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param("is", $attempt, $username);

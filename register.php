@@ -1,10 +1,52 @@
 <?php
+session_start();
+
+// 生成CSRF令牌
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+
+<?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include 'db_connection.php';
     session_start();
+
+    // 驗證CSRF令牌
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo "Invalid CSRF token";
+        exit;
+    }
+
     // 接收表單提交的資料
-    $name = $_POST['name'];
-    $password = $_POST['password'];
+    $name = trim($_POST['name']);
+    $password = trim($_POST['password']);
+
+     // 檢查密碼是否符合規則
+     $passwordStrength = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/';
+     if (!preg_match($passwordStrength, $password)) {
+         echo "密碼不符合強密碼規則";
+         exit;
+    }
+
+    
+
+    // 檢查用戶名是否已存在
+    $check_sql = "SELECT id FROM users WHERE name = ?";
+    $check_stmt = $conn->prepare($check_sql);
+    $check_stmt->bind_param("s", $name);
+    $check_stmt->execute();
+    $check_stmt->store_result();
+
+    if ($check_stmt->num_rows > 0) {
+        echo "用戶名已存在";
+        $check_stmt->close();
+        $conn->close();
+        exit;
+    }
+    $check_stmt->close();
+
     // 將密碼加密
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
     
@@ -136,6 +178,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="confirm_password">確認密碼</label>
                 <input type="password" id="confirm_password" name="confirm_password" maxlength=30 onkeyup="validate();" required>
                 <span id="password_error" style="color: red;"></span>
+
+                <!-- CSRF 令牌隐藏字段 -->
+                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+
                 <button id='reg_btn' type="submit" >註冊</button>
             </form>
             <a class=switch href="login.php" >已有帳號，我要登入</a> 
